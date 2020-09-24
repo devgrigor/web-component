@@ -31,8 +31,8 @@ export declare class Engine {
     checkAndUpdate(): void;
     /**
      * Handling click on box with index of the product in current produc
-     * @param prod
-     * @param ind
+     * @param prod object containing product and the click type
+     * @param ind index in current products so it can be managed correctly
      */
     boxClicked(prod: {
         clickType: string;

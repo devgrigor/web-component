@@ -1,17 +1,26 @@
 import { Selection, easeLinear } from "d3";
 import { Shape } from "./Shape";
+import { Subject, Subscription } from "rxjs";
 
+/**
+ * Class product implement Shape for drawing the product box on the scene
+ */
 export class Product implements Shape {
     type: 'halal' | 'haram';
     width: number;
     height: number;
     x: number;
     mainBox: Selection<SVGElement, unknown, null, undefined>;
+    clicked: Subject<any>;
+    subscribtion: Subscription;
+    previousProduct: Product;
+    nextProduct: Product;
 
     constructor(width: number, height: number, type: 'halal' | 'haram') {
         this.width = width;
         this.height = height;
         this.type = type;
+        this.clicked = new Subject();
     }
 
     /**
@@ -23,7 +32,7 @@ export class Product implements Shape {
         this.mainBox = scene.append('svg')
                         .attr('width', this.width)
                         .attr('height', this.height)
-                        .attr('y', this.height * 2);
+                        .attr('y', 30);
         
         this.mainBox.append('rect')
             .attr('x', 0)
@@ -56,18 +65,23 @@ export class Product implements Shape {
                 .attr('y2', this.height/2)
                 .attr('stroke', 'green');
         }
-        
+
+        this.mainBox.node().onmousedown = (ev) => this.onClick(ev);
     }
 
     /**
      * Moving the box to left by step using animation
      * @param step amount of pixels that box will move
      */
-    moveLeft(step: number) {
+    moveLeft(step: number, duration: number) {
         this.x -= step;
+        if(!this.mainBox) {
+            console.error('this object wasn\'t drawn yet');
+            return ;
+        }
         this.mainBox.transition('leftmove')
             .ease(easeLinear)
-            .duration(500)
+            .duration(duration)
             .attr('x', this.x);
     }
 
@@ -84,9 +98,38 @@ export class Product implements Shape {
         this.mainBox.attr('x', x);
     }
 
+    /**
+     * Removes product from the view and from the list
+     */
     remove() {
-        this.mainBox.transition('leftmove').duration(0);
-        this.mainBox.remove();
-        this.mainBox = null;
+        if(this.mainBox) {
+            this.mainBox.remove();
+            this.mainBox = null;
+        }
+
+        if(this.subscribtion) {
+            this.subscribtion.unsubscribe();
+        }        
+    }
+
+    /**
+     * Just a click handler
+     * @param ev mouse event of the click
+     */
+    onClick(ev: MouseEvent) {
+        ev.stopPropagation();
+        ev.preventDefault();
+        
+        if(ev.button == 2) {
+            this.clicked.next({
+                clickType: 'right',
+                product: this
+            });
+        } else {
+            this.clicked.next({
+                clickType: 'left',
+                product: this
+            });
+        }
     }
 }

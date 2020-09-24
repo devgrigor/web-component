@@ -30,27 +30,43 @@ export class AssemblyLine implements Shape {
             .attr('stroke', 'green');
 
         this.title = mainBox.append('text')
-            .attr('x', 10)
+            .attr('x', this.width/4)
             .attr('y', this.height/10 - 10)
-            .attr('storke', 'black')
-            .attr('context', '');
+            .attr('fill', 'yellow');
 
         return mainBox;
     }
 
     /**
-     * Setting the title
-     * @param title The new title
+     * Setting info panel
+     * @param data that has all fields of info panel at this times
      */
-    setTitle(title: string) {
-        this.title.html(title);
+    setInfo(data: {
+        wrongAmount: number;
+        halalCount: number;
+        haramCount: number;
+    }) {
+        this.title.html(`
+            <tspan>Halal: ${data.halalCount} </tspan>
+            <tspan>Haram: ${data.haramCount} </tspan>
+            <tspan>Wrong: ${data.wrongAmount} </tspan>
+        `);
     }
     
     /**
      * Setting line color
      * @param color Color name of the line
      */
-    setLineColor(color: 'red' | 'green') {
+    setLineColor(color: 'red' | 'green' | 'yellow') {
         this.line.attr('stroke', color);
+    }
+
+    /**
+     * Setting the custom title with color
+     * @param title string of the title
+     * @param color color of the title
+     */
+    setTitle(title: string, color: 'red' | 'green') {
+        this.title.html(title).attr('fill', color);
     }
 }

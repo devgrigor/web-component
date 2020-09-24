@@ -1,5 +1,4 @@
 import { select, Selection } from  "d3";
-import { Subject } from "rxjs";
 import { Shape } from "./Shapes/Shape";
 
 /**
@@ -8,7 +7,8 @@ import { Shape } from "./Shapes/Shape";
 export class Scene {
     scene: Selection<SVGElement, unknown, null, undefined>;
     container: HTMLElement;
-    clicked: Subject<String>;
+    width: number;
+    height: number;
 
     /**
      * Creates a scene with given width and height and adds it to container
@@ -22,11 +22,13 @@ export class Scene {
         this.container.appendChild(this.scene.node());
         this.setStyleAttribute('width', width + 'px');
         this.setStyleAttribute('height', height + 'px');
-        this.scene.node().onclick = (ev) => this.onClick(ev);
-        this.scene.node().oncontextmenu  = (ev) => this.onClick(ev);
-        this.clicked = new Subject();
+        this.width = width;
+        this.height = height;
 
-        // Drawing the assembly line
+        this.scene.node().oncontextmenu = (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
     }
 
     /**
@@ -45,20 +47,5 @@ export class Scene {
      */
     draw(shape: Shape) {
         return shape.draw(this.scene);
-    }
-
-    /**
-     * Just a click handler
-     * @param ev mouse event of the click
-     */
-    onClick(ev: MouseEvent) {
-        ev.stopPropagation();
-        ev.preventDefault();
-        
-        if(ev.type == 'contextmenu') {
-            this.clicked.next('right');
-        } else {
-            this.clicked.next('left');
-        }
     }
 }

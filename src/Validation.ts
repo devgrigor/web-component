@@ -22,8 +22,13 @@ export const parseAndValidateData = (obj: MainComponent): boolean => {
         return false;
     }
 
-    if(!obj.frequancy) {
-        console.error('No frequancy was setted up');
+    if(!obj.frequency) {
+        console.error('No frequency was setted up');
+        return false;
+    }
+
+    if(obj.frequency > 99) {
+        console.error('Frequency must be at most 99');
         return false;
     }
 

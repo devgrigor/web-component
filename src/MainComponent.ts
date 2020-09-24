@@ -1,9 +1,10 @@
+import '@webcomponents/custom-elements/src/native-shim';
 import { Scene } from "./Scene";
 import { Engine } from "./Engine";
 import { parseAndValidateData } from "./Validation";
 
 export class MainComponent extends HTMLElement {
-    frequancy: number;
+    frequency: number;
     width: number;
     height: number;
     goal: number;
@@ -25,7 +26,8 @@ export class MainComponent extends HTMLElement {
     render() {
         parseAndValidateData(this);
         this.innerHTML = `
-            <p>${this.frequancy}</p>
+            <p>Frequency: ${this.frequency}</p>
+            <p>Wrong limit: ${this.wrong_limit}</p>
         `;
     }
 
@@ -36,8 +38,8 @@ export class MainComponent extends HTMLElement {
         const scene = new Scene(this.width, this.height, this);
         scene.setStyleAttribute('background-color', 'grey');
         
-        const engine = new Engine(scene);
-        engine.start(this.width, this.height, this.frequancy);
+        const engine = new Engine(scene, this.frequency, this.wrong_limit, this.goal);
+        engine.start();
     }
 }
 
