@@ -19,9 +19,9 @@ export class AssemblyLine implements Shape {
      * @param height height
      */
     draw(scene: Selection<SVGElement, unknown, null, undefined>): Selection<SVGElement, unknown, null, undefined> {
-        const mainBox = scene.append('svg').attr('width', this.width).attr('height', this.height);
+        const mainElement = scene.append('svg').attr('width', this.width).attr('height', this.height);
 
-        this.line = mainBox.append('line')
+        this.line = mainElement.append('line')
             .attr('x1', 10)
             .attr('y1', this.height/10)
             .attr('stroke-width', 4)
@@ -29,12 +29,12 @@ export class AssemblyLine implements Shape {
             .attr('y2', this.height - this.height/10)
             .attr('stroke', 'green');
 
-        this.title = mainBox.append('text')
+        this.title = mainElement.append('text')
             .attr('x', this.width/4)
             .attr('y', this.height/10 - 10)
             .attr('fill', 'yellow');
 
-        return mainBox;
+        return mainElement;
     }
 
     /**

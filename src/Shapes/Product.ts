@@ -12,7 +12,7 @@ export class Product implements Shape {
     x: number;
     mainBox: Selection<SVGElement, unknown, null, undefined>;
     clicked: Subject<any>;
-    subscribtion: Subscription;
+    subscription: Subscription;
     previousProduct: Product;
     nextProduct: Product;
 
@@ -107,8 +107,8 @@ export class Product implements Shape {
             this.mainBox = null;
         }
 
-        if(this.subscribtion) {
-            this.subscribtion.unsubscribe();
+        if(this.subscription) {
+            this.subscription.unsubscribe();
         }        
     }
 

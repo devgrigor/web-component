@@ -6,7 +6,7 @@ export declare class Engine {
     status: 'started' | 'stopped';
     speed: number;
     assemblyLine: AssemblyLine;
-    timeOut: any;
+    movementInterval: any;
     usedProducts: Product[];
     currentProducts: Product[];
     frequency: number;
@@ -21,6 +21,14 @@ export declare class Engine {
      * Starting all of the drawing and animation
      */
     start(): void;
+    /**
+     * Creation of new products at given frequancy
+     */
+    initializeProducts(): void;
+    /**
+     * Moving currently active products down the assembly line
+     */
+    initializeMovement(): void;
     /**
      * Stops the motion completely by removing all time intervals present and currently active products
      */

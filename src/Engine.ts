@@ -7,7 +7,7 @@ export class Engine {
     status: 'started' | 'stopped' = 'stopped';
     speed: number = 100;
     assemblyLine: AssemblyLine;
-    timeOut: any;
+    movementInterval: any;
     usedProducts: Product[] = [];
     currentProducts: Product[] = [];
     frequency: number;
@@ -52,7 +52,17 @@ export class Engine {
         this.assemblyLine.setLineColor('yellow');
         this.checkAndUpdate();
 
-        // Creation of new products at given frequancy
+        this.initializeProducts();
+        this.initializeMovement();
+        
+    }
+
+    /**
+     * Creation of new products at given frequancy
+     */
+    initializeProducts() {
+        const width = this.scene.width;
+
         this.newProductInterval = setInterval(() => {
             const boxType = Math.floor(Math.random() * 2) + 1;
             let box: Product;
@@ -79,7 +89,8 @@ export class Engine {
                 }
             }
 
-            box.subscribtion = box.clicked.subscribe((ev) => this.boxClicked(ev, i));
+            // Creating subscription
+            box.subscription = box.clicked.subscribe((ev) => this.boxClicked(ev, i));
 
             if(i == this.currentProducts.length) {
                 this.currentProducts.push(box);
@@ -88,9 +99,13 @@ export class Engine {
             }
             
         }, this.frequency);
+    }
 
-        // Moving currently active products down the assembly line
-        this.timeOut = setInterval(() => {
+    /**
+     * Moving currently active products down the assembly line
+     */
+    initializeMovement() {
+        this.movementInterval = setInterval(() => {
             this.currentProducts.forEach((box: Product, ind: number) => {
                 // This product was moved to used ones
                 if(box == null) {
@@ -117,7 +132,7 @@ export class Engine {
      * Stops the motion completely by removing all time intervals present and currently active products
      */
     stop(color: 'red' | 'green') {
-        clearTimeout(this.timeOut);
+        clearTimeout(this.movementInterval);
         clearTimeout(this.newProductInterval);
 
         for(let prod of this.currentProducts) {
@@ -138,7 +153,12 @@ export class Engine {
         const speedTens = Math.floor((this.speed - 100) / 10);
 
         if(tens > speedTens) {
-            this.speed += tens * 10;
+            // Speed can't be larger than the half of the scene, because object will go out in 2 steps
+            if(this.speed + tens*10 < this.scene.width/2) {
+                this.speed += tens * 10;
+            } else {
+                this.speed = this.scene.width/2;
+            }
         }
 
         this.assemblyLine.setInfo({

@@ -11,7 +11,7 @@ export declare class Product implements Shape {
     x: number;
     mainBox: Selection<SVGElement, unknown, null, undefined>;
     clicked: Subject<any>;
-    subscribtion: Subscription;
+    subscription: Subscription;
     previousProduct: Product;
     nextProduct: Product;
     constructor(width: number, height: number, type: 'halal' | 'haram');
