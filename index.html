@@ -6,10 +6,29 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>TypeScript Web Component</title>
     <script type="module" src="build/bundle.js"></script>
+    <script>
+        function start() {
+            document.getElementById('warehouse').start();
+        }
+
+        function stop() {
+            console.log(document.getElementById('warehouse').getData());
+            document.getElementById('warehouse').stop();
+        }
+
+        function initWarehouse() {
+            document.getElementById('warehouse').init();
+        }
+    </script>
 </head>
-<body>
-    <suleimans-warehouse 
+<body onload="initWarehouse()">
+    <suleimans-warehouse id="warehouse"
         width="450"  height="250" goal="5" wrong_limit="15"
-        frequency="10"></suleimans-warehouse>
+        frequency="35"></suleimans-warehouse>
+    <div>
+        <P>Demo buttons</P>
+        <button onclick="start()">Start</button>
+        <button onclick="stop()">Stop</button>
+    </div>
 </body>
 </html>

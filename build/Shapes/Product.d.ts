@@ -37,7 +37,7 @@ export declare class Product implements Shape {
     remove(): void;
     /**
      * Just a click handler
-     * @param ev mouse event of the click
+     * @param ev mouse event of the mousedown
      */
     onClick(ev: MouseEvent): void;
 }

@@ -114,7 +114,7 @@ export class Product implements Shape {
 
     /**
      * Just a click handler
-     * @param ev mouse event of the click
+     * @param ev mouse event of the mousedown
      */
     onClick(ev: MouseEvent) {
         ev.stopPropagation();

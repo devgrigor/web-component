@@ -46,11 +46,11 @@ export class AssemblyLine implements Shape {
         halalCount: number;
         haramCount: number;
     }) {
-        this.title.html(`
+        this.setTitle(`
             <tspan>Halal: ${data.halalCount} </tspan>
             <tspan>Haram: ${data.haramCount} </tspan>
             <tspan>Wrong: ${data.wrongAmount} </tspan>
-        `);
+        `, 'yellow');
     }
     
     /**
@@ -66,7 +66,7 @@ export class AssemblyLine implements Shape {
      * @param title string of the title
      * @param color color of the title
      */
-    setTitle(title: string, color: 'red' | 'green') {
+    setTitle(title: string, color: 'red' | 'green' | 'yellow') {
         this.title.html(title).attr('fill', color);
     }
 }

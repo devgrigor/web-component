@@ -3,7 +3,7 @@ import { AssemblyLine } from "./Shapes/AssemblyLine";
 import { Product } from "./Shapes/Product";
 export declare class Engine {
     scene: Scene;
-    direction: 'halal' | 'haram';
+    status: 'started' | 'stopped';
     speed: number;
     assemblyLine: AssemblyLine;
     timeOut: any;
@@ -22,7 +22,7 @@ export declare class Engine {
      */
     start(): void;
     /**
-     * Stops the motion completely by removing all time intervals present
+     * Stops the motion completely by removing all time intervals present and currently active products
      */
     stop(color: 'red' | 'green'): void;
     /**
@@ -31,8 +31,8 @@ export declare class Engine {
     checkAndUpdate(): void;
     /**
      * Handling click on box with index of the product in current produc
-     * @param prod
-     * @param ind
+     * @param prod object containing product and the click type
+     * @param ind index in current products so it can be managed correctly
      */
     boxClicked(prod: {
         clickType: string;

@@ -32,6 +32,6 @@ export declare class AssemblyLine implements Shape {
      * @param title string of the title
      * @param color color of the title
      */
-    setTitle(title: string, color: 'red' | 'green'): void;
+    setTitle(title: string, color: 'red' | 'green' | 'yellow'): void;
 }
 //# sourceMappingURL=AssemblyLine.d.ts.map

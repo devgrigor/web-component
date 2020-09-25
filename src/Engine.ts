@@ -4,7 +4,7 @@ import { Product } from "./Shapes/Product";
 
 export class Engine {
     scene: Scene;
-    direction: 'halal' | 'haram' = 'halal';
+    status: 'started' | 'stopped' = 'stopped';
     speed: number = 100;
     assemblyLine: AssemblyLine;
     timeOut: any;
@@ -12,9 +12,9 @@ export class Engine {
     currentProducts: Product[] = [];
     frequency: number;
     newProductInterval: any;
-    halalBoxCount: number = 0;
-    haramBoxCount: number = 0;
-    wrongCount: number = 0;
+    halalBoxCount: number;
+    haramBoxCount: number;
+    wrongCount: number;
     wrongLimit: number;
     goal: number;
 
@@ -30,13 +30,29 @@ export class Engine {
      * Starting all of the drawing and animation
      */
     start() {
+        if(this.status == 'started') {
+            console.error('Engine is already running');
+            return ;
+        }
+
         const width = this.scene.width;
         const height = this.scene.height;
-        this.assemblyLine = new AssemblyLine(width, height);
-        this.scene.draw(this.assemblyLine);
+
+        this.currentProducts = [];
+        this.status = 'started';
+        this.halalBoxCount = 0;
+        this.haramBoxCount = 0;
+        this.wrongCount = 0;
+        
+        if(!this.assemblyLine) {
+            this.assemblyLine = new AssemblyLine(width, height);
+            this.scene.draw(this.assemblyLine);
+        }
+        
         this.assemblyLine.setLineColor('yellow');
         this.checkAndUpdate();
 
+        // Creation of new products at given frequancy
         this.newProductInterval = setInterval(() => {
             const boxType = Math.floor(Math.random() * 2) + 1;
             let box: Product;
@@ -73,12 +89,14 @@ export class Engine {
             
         }, this.frequency);
 
+        // Moving currently active products down the assembly line
         this.timeOut = setInterval(() => {
             this.currentProducts.forEach((box: Product, ind: number) => {
                 // This product was moved to used ones
                 if(box == null) {
                     return ;
                 }
+
                 if(box.x < 10) {
                     box.remove();
                     this.usedProducts.push(box);
@@ -86,15 +104,17 @@ export class Engine {
 
                     this.wrongCount++;
                     this.checkAndUpdate();
-                } else {
-                    box.moveLeft(this.speed, this.frequency);
+
+                    return ;
                 }
+                
+                box.moveLeft(this.speed, this.frequency);
             })
         }, this.frequency);
     }
 
     /**
-     * Stops the motion completely by removing all time intervals present
+     * Stops the motion completely by removing all time intervals present and currently active products
      */
     stop(color: 'red' | 'green') {
         clearTimeout(this.timeOut);
@@ -107,6 +127,7 @@ export class Engine {
         }
 
         this.assemblyLine.setLineColor(color);
+        this.status = 'stopped';
     }
 
     /**
